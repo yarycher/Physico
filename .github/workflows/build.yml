@@ -9,6 +9,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Unzip project
         run: unzip -q PhysicoBY_starter_0_4.zip
+      - name: Fix Java target
+        working-directory: PhysicoBY
+        run: |
+          printf '\nandroid {\n  compileOptions {\n    sourceCompatibility = JavaVersion.VERSION_17\n    targetCompatibility = JavaVersion.VERSION_17\n  }\n}\n' >> app/build.gradle.kts
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
