@@ -7,12 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip project
-        run: unzip -q PhysicoBY_starter_0_4.zip
-      - name: Fix Java target
-        working-directory: PhysicoBY
+      - name: Unzip newest project
         run: |
-          printf '\nandroid {\n  compileOptions {\n    sourceCompatibility = JavaVersion.VERSION_17\n    targetCompatibility = JavaVersion.VERSION_17\n  }\n}\n' >> app/build.gradle.kts
+          ZIP=$(ls PhysicoBY_*.zip | sort -V | tail -1)
+          echo "Building from $ZIP"
+          unzip -q "$ZIP"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -26,7 +25,7 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0"
       - name: Build
         working-directory: PhysicoBY
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon --console=plain
       - uses: actions/upload-artifact@v4
         with:
           name: PhysicoBY-apk
